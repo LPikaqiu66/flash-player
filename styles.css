@@ -1,0 +1,40 @@
+/* 全屏容器 */
+.video-wrapper {
+    position: relative;
+    width: 100vw;       /* 视窗宽度 */
+    height: 100vh;      /* 视窗高度 */
+    overflow: hidden;   /* 隐藏溢出内容 */
+  }
+  
+  /* 播放器自适应核心 */
+  .video-js.vjs-fill {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);  /* 居中定位 */
+    object-fit: contain;               /* 保持比例填充 */
+  }
+  
+  /* 移动端横竖屏适配 */
+  @media (orientation: portrait) {     /* 竖屏模式 */
+    .video-js.vjs-fill {
+      width: 100%;
+      height: auto;
+    }
+  }
+  
+  @media (orientation: landscape) {    /* 横屏模式 */
+    .video-js.vjs-fill {
+      width: auto;
+      height: 100%;
+    }
+  }
+  
+  /* 控制栏响应式 */
+  .vjs-control-bar {
+    font-size: clamp(12px, 2vw, 16px); /* 动态字体大小 */
+  }
