@@ -1,40 +1,73 @@
-/* 全屏容器 */
-.video-wrapper {
-    position: relative;
-    width: 100vw;       /* 视窗宽度 */
-    height: 100vh;      /* 视窗高度 */
-    overflow: hidden;   /* 隐藏溢出内容 */
+/* 基础布局 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* 播放器容器（16:9比例 + 60%宽度） */
+.video-container {
+  width: 60%;
+  margin: 0 auto 30px;
+  position: relative;
+}
+
+/* 16:9比例实现 */
+.video-container::before {
+  content: "";
+  display: block;
+  padding-top: 56.25%; /* 9/16=56.25% */
+}
+
+.video-js {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 评论区样式 */
+.comments-section {
+  width: 60%;
+  margin: 0 auto;
+  border-top: 2px solid #eee;
+  padding-top: 20px;
+}
+
+.comments-list {
+  margin: 20px 0;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.comment-item {
+  padding: 10px;
+  margin-bottom: 15px;
+  background: #f8f9fa;
+  border-radius: 5px;
+}
+
+#comment-form textarea {
+  width: 100%;
+  height: 80px;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+#comment-form button {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .video-container, .comments-section {
+      width: 90%;
   }
-  
-  /* 播放器自适应核心 */
-  .video-js.vjs-fill {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    transform: translate(-50%, -50%);  /* 居中定位 */
-    object-fit: contain;               /* 保持比例填充 */
-  }
-  
-  /* 移动端横竖屏适配 */
-  @media (orientation: portrait) {     /* 竖屏模式 */
-    .video-js.vjs-fill {
-      width: 100%;
-      height: auto;
-    }
-  }
-  
-  @media (orientation: landscape) {    /* 横屏模式 */
-    .video-js.vjs-fill {
-      width: auto;
-      height: 100%;
-    }
-  }
-  
-  /* 控制栏响应式 */
-  .vjs-control-bar {
-    font-size: clamp(12px, 2vw, 16px); /* 动态字体大小 */
-  }
+}

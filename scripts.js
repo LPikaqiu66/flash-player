@@ -1,25 +1,56 @@
-// 初始化播放器时启用填充模式
+// 初始化播放器
 const player = videojs('main-video', {
-    fluid: false,    // 禁用默认fluid模式
-    responsive: true,
-    fill: true,      // 启用自定义填充模式
-    aspectRatio: '16:9' // 初始宽高比
+  fluid: false,
+  aspectRatio: '16:9'
+});
+
+// 评论系统
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('comment-form');
+  const commentsList = document.getElementById('comments-list');
+  const commentCount = document.getElementById('comment-count');
+
+  // 加载存储的评论
+  let comments = JSON.parse(localStorage.getItem('comments') || '[]');
+  updateComments();
+
+  // 提交评论
+  form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = form.querySelector('textarea').value.trim();
+      
+      if (text) {
+          comments.push({
+              text: text,
+              time: new Date().toLocaleString(),
+              likes: 0
+          });
+          
+          localStorage.setItem('comments', JSON.stringify(comments));
+          updateComments();
+          form.reset();
+      }
   });
-  
-  // 窗口大小变化时动态重置
-  window.addEventListener('resize', () => {
-    player.currentDimensions({}); // 强制刷新尺寸计算
-  });
-  
-  // 全屏切换时优化
-  player.on('fullscreenchange', () => {
-    if (player.isFullscreen()) {
-      player.tech().el().style.objectFit = 'contain';
-    }
-  });
-  // 管理员接口示例 违规检测
-fetch('/api/delete-video', {
-    method: 'POST',
-    headers: { 'Authorization': 'Bearer <ADMIN_TOKEN>' },
-    body: JSON.stringify({ videoId: '违规ID' })
-  });
+
+  // 更新评论显示
+  function updateComments() {
+      commentsList.innerHTML = comments.map((comment, index) => `
+          <div class="comment-item">
+              <div class="comment-text">${comment.text}</div>
+              <div class="comment-meta">
+                  <span>${comment.time}</span>
+                  <button onclick="handleLike(${index})">👍 ${comment.likes}</button>
+              </div>
+          </div>
+      `).join('');
+      
+      commentCount.textContent = comments.length;
+  }
+
+  // 点赞功能
+  window.handleLike = (index) => {
+      comments[index].likes++;
+      localStorage.setItem('comments', JSON.stringify(comments));
+      updateComments();
+  };
+});
